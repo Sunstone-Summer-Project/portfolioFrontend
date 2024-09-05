@@ -41,13 +41,13 @@ next-env.d.ts
 .env.production.local
 .env
 
-# Video files
-*.mp4
-*.mov
-*.wmv
-*.avi
-*.mkv
-*.flv
-*.webm
-*.mpeg
+# # Video files
+# *.mp4
+# *.mov
+# *.wmv
+# *.avi
+# *.mkv
+# *.flv
+# *.webm
+# *.mpeg
 
