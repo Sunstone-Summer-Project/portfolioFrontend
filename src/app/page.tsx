@@ -135,6 +135,26 @@ export default function Page() {
           </div>
         </div>
       </section>
+      <section id="download-cv">
+  <div className="flex min-h-0 flex-col gap-y-3">
+    {/* Title */}
+    <BlurFade delay={BLUR_FADE_DELAY * 11}>
+      <h2 className="text-xl font-bold">Download CV</h2>
+    </BlurFade>
+    
+    {/* Download Button */}
+    <div className="flex gap-2">
+      <BlurFade delay={BLUR_FADE_DELAY * 12}>
+        <a href="/Virendra_Pal_cv_3313.pdf" download>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            Download CV
+          </button>
+        </a>
+      </BlurFade>
+    </div>
+  </div>
+</section>
+
       <section id="projects">
         <div className="space-y-12 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 11}>
@@ -222,7 +242,7 @@ export default function Page() {
       <section id="contact" className="w-full">
         <div className="grid items-center  gap-4 px-4 text-center md:px-6 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 16}>
-            <div className="space-y-3">
+            <div className="space-y-3 ">
               <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
                 Contact
               </div>
@@ -235,7 +255,10 @@ export default function Page() {
           </BlurFade>
         </div>
       </section>
+      <section id="signUp" >
+
         <SignupFormDemo/>
+      </section>
     </main>
   );
 }

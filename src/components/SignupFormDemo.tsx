@@ -12,6 +12,7 @@ const SignupFormDemo = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState(''); // New message state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [formType, setFormType] = useState<'signUp' | 'logIn'>('signUp');
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +21,7 @@ const SignupFormDemo = () => {
     e.preventDefault();
     try {
       await signUp(email, password); // Firebase signup
-      await axios.post('http://localhost:4000/register', { firstName, lastName, phoneNumber, email, password });
+      await axios.post('http://localhost:4000/register', { firstName, lastName, phoneNumber, email, password, message }); // Send message to backend
       setIsLoggedIn(true);
       alert('Sign Up Successful!');
     } catch (error: any) {
@@ -64,7 +65,6 @@ const SignupFormDemo = () => {
     }
   };
 
-  // Render the signup/login form or logout button
   return (
     <div className="max-w-md w-full border-black border-[1px] mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
@@ -86,40 +86,55 @@ const SignupFormDemo = () => {
           onSubmit={formType === 'signUp' ? handleSignUp : handleLogIn}
           className="my-8"
         >
-          {/* Form fields for first name, last name, phone number, email, and password */}
-          <div className="flex flex-col space-y-2 mb-4">
-            <label htmlFor="firstName" className="text-sm font-medium">First Name</label>
-            <input
-              id="firstName"
-              type="text"
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 mb-4">
-            <label htmlFor="lastName" className="text-sm font-medium">Last Name</label>
-            <input
-              id="lastName"
-              type="text"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 mb-4">
-            <label htmlFor="phoneNumber" className="text-sm font-medium">Phone Number</label>
-            <input
-              id="phoneNumber"
-              type="text"
-              placeholder="Phone Number"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="border rounded-md p-2"
-            />
-          </div>
+          {/* Conditionally render additional fields for sign-up */}
+          {formType === 'signUp' && (
+            <>
+              <div className="flex flex-col space-y-2 mb-4">
+                <label htmlFor="firstName" className="text-sm font-medium">First Name</label>
+                <input
+                  id="firstName"
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="border rounded-md p-2"
+                />
+              </div>
+              <div className="flex flex-col space-y-2 mb-4">
+                <label htmlFor="lastName" className="text-sm font-medium">Last Name</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="border rounded-md p-2"
+                />
+              </div>
+              <div className="flex flex-col space-y-2 mb-4">
+                <label htmlFor="phoneNumber" className="text-sm font-medium">Phone Number</label>
+                <input
+                  id="phoneNumber"
+                  type="text"
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="border rounded-md p-2"
+                />
+              </div>
+              <div className="flex flex-col space-y-2 mb-4">
+                <label htmlFor="message" className="text-sm font-medium">Message</label>
+                <textarea
+                  id="message"
+                  placeholder="Your message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="border rounded-md p-2"
+                />
+              </div>
+            </>
+          )}
+          {/* Email and Password - common to both sign-up and log-in */}
           <div className="flex flex-col space-y-2 mb-4">
             <label htmlFor="email" className="text-sm font-medium">Email Address</label>
             <input
@@ -142,6 +157,7 @@ const SignupFormDemo = () => {
               className="border rounded-md p-2"
             />
           </div>
+          
           <button
             type="submit"
             className="bg-gradient-to-br from-black to-neutral-600 block w-full text-white rounded-md h-10 font-medium"
