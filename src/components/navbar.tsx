@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { auth } from "@/lib/firebaseConfig";
+import { IconLogout } from '@tabler/icons-react'; 
+
 import { signOut } from "firebase/auth";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -102,25 +104,28 @@ export default function Navbar() {
           </Tooltip>
         </DockIcon>
         {user && (
-          <DockIcon>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={handleSignOut}
-                  className={cn(
-                    buttonVariants({ variant: "ghost", size: "icon" }),
-                    "size-12"
-                  )}
-                >
-                  <span className="text-neutral-700 dark:text-neutral-300 text-sm">Sign Out</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Sign Out</p>
-              </TooltipContent>
-            </Tooltip>
-          </DockIcon>
-        )}
+  <DockIcon>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={handleSignOut}
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "icon" }),
+            "size-9 flex items-center justify-center"
+          )}
+        >
+          {/* Icon */}
+          <IconLogout className="w-5 h-6 text-neutral-700 dark:text-neutral-300" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Sign Out</p>
+      </TooltipContent>
+    </Tooltip>
+  </DockIcon>
+)}
+
+
       </Dock>
     </div>
   );

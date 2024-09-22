@@ -27,7 +27,31 @@ export default function SignInPage() {
   // Handle sign up and log in logic
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+  
+    // Basic validation
+    if (isSignUp) {
+      if (!firstName || !lastName || !phoneNumber || !email || !password) {
+        setError('All fields are required!');
+        return;
+      }
+  
+      // Validate phone number
+      const phoneRegex = /^\d{10}$/; // Regex for 10-digit phone number
+      if (!phoneRegex.test(phoneNumber)) {
+        setError('Phone number must be 10 digits!');
+        return;
+      }
+  
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+      if (!emailRegex.test(email)) {
+        setError('Please enter a valid email address!');
+        return;
+      }
+    }
+  
     try {
+      setError(null); // Reset error before submitting
       if (isSignUp) {
         // Sign up with Firebase
         await signUp(email, password);
@@ -41,7 +65,6 @@ export default function SignInPage() {
           password,
           message
         });
-
       } else {
         // Log in with Firebase
         await logIn(email, password);
@@ -52,6 +75,7 @@ export default function SignInPage() {
       setError('Authentication Failed!');
     }
   };
+  
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();

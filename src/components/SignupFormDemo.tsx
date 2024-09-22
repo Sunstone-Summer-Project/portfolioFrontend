@@ -19,9 +19,31 @@ const SignupFormDemo = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+  
+    // Basic validation
+    if (!firstName || !lastName || !phoneNumber || !email || !password) {
+      setError('All fields are required!');
+      return;
+    }
+  
+    // Validate phone number
+    const phoneRegex = /^\d{10}$/; // Regex for 10-digit phone number
+    if (!phoneRegex.test(phoneNumber)) {
+      setError('Phone number must be 10 digits!');
+      return;
+    }
+  
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address!');
+      return;
+    }
+  
     try {
+      setError(null); // Reset error before submitting
       await signUp(email, password); // Firebase signup
-      await axios.post('http://localhost:4000/register', { firstName, lastName, phoneNumber, email, password, message }); // Send message to backend
+      await axios.post('http://localhost:4000/register', { firstName, lastName, phoneNumber, email, password, message });
       setIsLoggedIn(true);
       alert('Sign Up Successful!');
     } catch (error: any) {
@@ -29,6 +51,7 @@ const SignupFormDemo = () => {
       setError(error.response?.data?.msg || 'Sign Up Failed!');
     }
   };
+  
 
   const handleLogIn = async (e: React.FormEvent) => {
     e.preventDefault();
