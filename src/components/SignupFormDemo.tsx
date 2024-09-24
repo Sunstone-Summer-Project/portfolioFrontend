@@ -43,7 +43,7 @@ const SignupFormDemo = () => {
     try {
       setError(null); // Reset error before submitting
       await signUp(email, password); // Firebase signup
-      await axios.post('https://portfolio-database.vercel.app/register', { firstName, lastName, phoneNumber, email, password, message });
+      await axios.post('https://portfoliodatabase-e4ip.onrender.com/register', { firstName, lastName, phoneNumber, email, password, message });
       setIsLoggedIn(true);
       alert('Sign Up Successful!');
     } catch (error: any) {

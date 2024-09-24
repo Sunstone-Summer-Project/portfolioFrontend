@@ -57,7 +57,7 @@ export default function SignInPage() {
         await signUp(email, password);
         
         // Send additional data to your backend
-        await axios.post('https://portfolio-database.vercel.app/register', {
+        await axios.post('https://portfoliodatabase-e4ip.onrender.com/register', {
           firstName,
           lastName,
           phoneNumber,
