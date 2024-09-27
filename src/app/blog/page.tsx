@@ -3,6 +3,7 @@ import { getBlogPosts } from "@/data/blog";
 import Link from "next/link";
 import { format } from "date-fns";
 import { urlFor } from "@/lib/sanityClient"; // Make sure this import is correct
+import Image from 'next/image'; // Import the Image component
 
 interface BlogPost {
   slug: string;
@@ -43,18 +44,21 @@ export default async function BlogPage() {
                     {format(date, "MMMM dd, yyyy")}
                   </p>
                   <div className="flex items-center gap-2">
-                  {post.authorImage && (
-                    <img
-                      src={urlFor(post.authorImage).url()} // Ensure URL is correctly built
-                      alt={post.authorName || "Author image"}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  )}
-                  {post.authorName && (
-                    <p className="text-xs text-muted-foreground">
-                      By {post.authorName}
-                    </p>
-                  )}
+                    {post.authorImage && (
+                      <Image
+                        src={urlFor(post.authorImage).url()} // Ensure URL is correctly built
+                        alt={post.authorName || "Author image"}
+                        className="rounded-full"
+                        width={32} // Set appropriate width
+                        height={32} // Set appropriate height
+                        layout="fixed" // Optionally use "fixed" or "responsive" layout
+                      />
+                    )}
+                    {post.authorName && (
+                      <p className="text-xs text-muted-foreground">
+                        By {post.authorName}
+                      </p>
+                    )}
                   </div>
                 </div>
               </Link>
