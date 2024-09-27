@@ -2,7 +2,7 @@ import BlurFade from "@/components/magicui/blur-fade";
 import { getBlogPosts } from "@/data/blog";
 import Link from "next/link";
 import { format } from "date-fns";
-import { urlFor } from "@/lib/sanityClient"; // Make sure this import is correct
+import { urlFor } from "@/lib/sanityClient"; // Ensure this import is correct
 import Image from 'next/image'; // Import the Image component
 
 interface BlogPost {
@@ -10,7 +10,7 @@ interface BlogPost {
   title: string;
   publishedAt: string; // ISO 8601 date string
   authorName?: string;
-  authorImage?: any; // Use a more specific type if possible
+  authorImage?: any; // Replace with a more specific type if possible
 }
 
 const BLUR_FADE_DELAY = 0.04;
@@ -45,14 +45,15 @@ export default async function BlogPage() {
                   </p>
                   <div className="flex items-center gap-2">
                     {post.authorImage && (
-                      <Image
-                        src={urlFor(post.authorImage).url()} // Ensure URL is correctly built
-                        alt={post.authorName || "Author image"}
-                        className="rounded-full"
-                        width={32} // Set appropriate width
-                        height={32} // Set appropriate height
-                        layout="fixed" // Optionally use "fixed" or "responsive" layout
-                      />
+                      <div className="relative" style={{ width: '32px', height: '32px' }}>
+                        <Image
+                          src={urlFor(post.authorImage).url()} // Ensure URL is correctly built
+                          alt={post.authorName || "Author image"}
+                          className="rounded-full"
+                          fill // Use fill to cover the parent div
+                          style={{ objectFit: 'cover' }} // Maintain aspect ratio
+                        />
+                      </div>
                     )}
                     {post.authorName && (
                       <p className="text-xs text-muted-foreground">

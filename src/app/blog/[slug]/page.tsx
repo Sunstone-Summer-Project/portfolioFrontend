@@ -12,13 +12,14 @@ const components = {
       if (!value) return null;
       const imageUrl = urlFor(value).url(); // Ensure this returns a valid URL
       return (
-        <Image
-          src={imageUrl}
-          alt={value.alt || "Blog image"}
-          width={800}  // Adjust the width to your desired value
-          height={500} // Adjust the height to your desired value
-          layout="responsive" // This will make the image responsive
-        />
+        <div style={{ position: 'relative', width: '100%', height: '500px' }}>
+          <Image
+            src={imageUrl}
+            alt={value.alt || "Blog image"}
+            fill // Use fill to make the image responsive
+            style={{ objectFit: 'cover' }} // Ensure the image covers the container
+          />
+        </div>
       );
     },
   },
