@@ -1,75 +1,71 @@
-import BlurFade from "@/components/magicui/blur-fade";
-import { getBlogPosts } from "@/data/blog";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
 import Link from "next/link";
 import { format } from "date-fns";
-import { urlFor } from "@/lib/sanityClient"; // Ensure this import is correct
-import Image from 'next/image'; // Import the Image component
+import BlurFade from "@/components/magicui/blur-fade";
 
+// Post interface for type safety
 interface BlogPost {
   slug: string;
   title: string;
-  publishedAt: string; // ISO 8601 date string
+  date: string;
   authorName?: string;
-  authorImage?: any; // Replace with a more specific type if possible
+  image?: string;
 }
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default async function BlogPage() {
-  try {
-    const posts: BlogPost[] = await getBlogPosts();
+function getAllPosts(): BlogPost[] {
+  const postsDirectory = path.join(process.cwd(), "posts");
+  const filenames = fs.readdirSync(postsDirectory);
 
-    if (!posts || posts.length === 0) {
-      return <p>No blog posts found.</p>;
-    }
+  return filenames.map((filename) => {
+    const slug = filename.replace(/\.mdx$/, "");
+    const filePath = path.join(postsDirectory, filename);
+    const fileContents = fs.readFileSync(filePath, "utf8");
+    const { data } = matter(fileContents);
 
-    return (
-      <section>
-        <BlurFade delay={BLUR_FADE_DELAY}>
-          <h1 className="font-medium text-2xl mb-8 tracking-tighter">Blog</h1>
-        </BlurFade>
-        {posts.map((post: BlogPost, id: number) => {
-          const date = new Date(post.publishedAt);
-          if (isNaN(date.getTime())) {
-            console.error(`Invalid date format for: ${post.publishedAt}`);
-            return null;
-          }
+    return {
+      slug,
+      title: data.title || slug,
+      date: data.date || new Date().toISOString(),
+      authorName: data.authorName || "Unknown",
+      image: data.image || null,
+    };
+  }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
 
-          return (
-            <BlurFade delay={BLUR_FADE_DELAY * 2 + id * 0.05} key={post.slug}>
-              <Link className="flex flex-col space-y-1 mb-4" href={`/blog/${post.slug}`}>
-                <div className="w-full flex flex-col">
-                  <p className="tracking-tight">{post.title}</p>
-                  <p className="h-6 text-xs text-muted-foreground">
-                    {format(date, "MMMM dd, yyyy")}
+export default function BlogPage() {
+  const posts = getAllPosts();
+
+  return (
+    <section>
+      <BlurFade delay={BLUR_FADE_DELAY}>
+        <h1 className="font-medium text-2xl mb-8 tracking-tighter">Blog</h1>
+      </BlurFade>
+
+      {posts.length === 0 ? (
+        <p>No blog posts found.</p>
+      ) : (
+        posts.map((post, index) => (
+          <BlurFade delay={BLUR_FADE_DELAY * 2 + index * 0.05} key={post.slug}>
+            <Link href={`/blog/${post.slug}`} className="flex flex-col space-y-1 mb-6">
+              <div className="w-full flex flex-col">
+                <p className="text-lg font-semibold tracking-tight">{post.title}</p>
+                <p className="text-sm text-muted-foreground">
+                  {format(new Date(post.date), "MMMM dd, yyyy")}
+                </p>
+                {post.authorName && (
+                  <p className="text-xs text-muted-foreground">
+                    By {post.authorName}
                   </p>
-                  <div className="flex items-center gap-2">
-                    {post.authorImage && (
-                      <div className="relative" style={{ width: '32px', height: '32px' }}>
-                        <Image
-                          src={urlFor(post.authorImage).url()} // Ensure URL is correctly built
-                          alt={post.authorName || "Author image"}
-                          className="rounded-full"
-                          fill // Use fill to cover the parent div
-                          style={{ objectFit: 'cover' }} // Maintain aspect ratio
-                        />
-                      </div>
-                    )}
-                    {post.authorName && (
-                      <p className="text-xs text-muted-foreground">
-                        By {post.authorName}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            </BlurFade>
-          );
-        })}
-      </section>
-    );
-  } catch (error) {
-    console.error('Error fetching blog posts:', error);
-    return <p>Failed to load blog posts.</p>;
-  }
+                )}
+              </div>
+            </Link>
+          </BlurFade>
+        ))
+      )}
+    </section>
+  );
 }
